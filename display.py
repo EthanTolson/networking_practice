@@ -4,7 +4,7 @@ class display():
     def __init__(self):
         # create tkinter object set the title and create a database creation object to work with the database
         self.window = tk.Tk()
-        self.window.title("Database Creation")
+        self.window.title("Messaging Application")
         self.window.state('zoomed')
         self.window.geometry("500x500")
 
