@@ -4,7 +4,7 @@ import testnode
 
 class display():
     def __init__(self):
-        # create tkinter object set the title and create a database creation object to work with the database
+        # create tkinter object set the title
         self.window = tk.Tk()
         self.window.title("Messaging Application")
         self.window.state('zoomed')
