@@ -1,5 +1,6 @@
 import tkinter as tk
-import mynode
+import threading
+import testnode
 
 class display():
     def __init__(self):
@@ -12,8 +13,6 @@ class display():
         self.node = None
 
     def exit(self):
-        if self.node != None:
-            self.node.stop()
         self.window.destroy()
 
     def draw_interface(self):
@@ -55,7 +54,8 @@ class display():
             self.label3.grid(row = 3, column = 1, columnspan = 2, padx = 10, pady = 10)
         else:
             try:
-                self.node = mynode.MyNode(self.ip.get(), int(self.port.get()), id = self.username.get(), window = self)
+                #self.node = mynode.MyNode(self.ip.get(), int(self.port.get()), id = self.username.get(), window = self)
+                self.node = testnode.testnode(self.ip.get(), int(self.port.get()), window = self)
                 self.connectionscreen()
             except:
                 self.label3.destroy()
@@ -102,7 +102,9 @@ class display():
             self.label3.grid(row = 3, column = 1, columnspan = 2, padx = 10, pady = 10)
         else:
             try:
-                self.node.connect_with_node(self.ip.get(), int(self.port.get()))
+                self.node.connect_to_node(self.ip.get(), int(self.port.get()))
+                self.thread1 = threading.Thread(target = self.node.listen, daemon = True)
+                self.thread1.start()
             except:
                 self.label3.destroy()
                 self.label3 = tk.Label(text = "Falied to connect to node.")
@@ -117,7 +119,7 @@ class display():
         self.port.destroy()
         self.ip.destroy()
 
-        self.label1 = tk.Label(text = f"You are currently connected with {self.node}.")
+        self.label1 = tk.Label(text = f"You are currently connected with {self.node.connectedaddress[0]}, {self.node.connectedaddress[1]}")
         self.label2 = tk.Label(text = "")
         self.label3 = tk.Label(text = "")
         self.label4 = tk.Label(text = "")
@@ -143,7 +145,7 @@ class display():
 
     def sendmessage(self):
         self.label8.config(text = f"You: {self.messageentry.get()}")
-        self.node.send_to_nodes({"sentfrom": self.node.id, "message": self.messageentry.get()})
+        self.node.send_message(self.messageentry.get())
         self.messageentry.delete(0, tk.END)
 
     
