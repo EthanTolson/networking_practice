@@ -1,15 +1,21 @@
 import socket
 
 class testnode():
-    def __init__(self, ip, port, window):
+    def __init__(self, ip, port, id, window):
         self.window = window
+        self.id = id
         self.port = port
         self.host = ip
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((ip, port))
 
     def connect_to_node(self, ip, port):
+        self.connectednodeid = None
         self.connectedaddress = (ip, port)
+        while self.connectednodeid == None:
+            self.sock.sendto(self.id.encode('utf-8'), self.connectedaddress)
+            id = self.sock.recv(1024).decode('utf-8')
+            self.connectednodeid = id
 
     def send_message(self, message):
         self.sock.sendto(message.encode("utf-8"), self.connectedaddress)
@@ -21,4 +27,4 @@ class testnode():
     def listen(self):
         while True:
             address, message = self.get_message()
-            self.window.label2.config(text = f"{address}: {message}")
+            self.window.label2.config(text = f"{self.connectednodeid}: {message}")

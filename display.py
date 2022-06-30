@@ -54,8 +54,7 @@ class display():
             self.label3.grid(row = 3, column = 1, columnspan = 2, padx = 10, pady = 10)
         else:
             try:
-                #self.node = mynode.MyNode(self.ip.get(), int(self.port.get()), id = self.username.get(), window = self)
-                self.node = testnode.testnode(self.ip.get(), int(self.port.get()), window = self)
+                self.node = testnode.testnode(self.ip.get(), int(self.port.get()), id = self.username.get(), window = self)
                 self.connectionscreen()
             except:
                 self.label3.destroy()
@@ -63,7 +62,7 @@ class display():
                 self.label3.grid(row = 3, column = 1, columnspan = 2, padx = 10, pady = 10)
 
     def adminview(self):
-        pass
+        self.window.destroy()
 
     def connectionscreen(self):
         self.loginbutton.destroy()
