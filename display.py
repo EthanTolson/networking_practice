@@ -1,6 +1,7 @@
 import tkinter as tk
 import threading
 import testnode
+from collections import deque
 
 class display():
     def __init__(self):
@@ -10,6 +11,7 @@ class display():
         self.window.state('zoomed')
         self.window.geometry("500x500")
         self.window.protocol("WM_DELETE_WINDOW", self.exit)
+        self.messages = deque()
         self.node = None
 
     def exit(self):
@@ -119,32 +121,27 @@ class display():
         self.ip.destroy()
 
         self.label1 = tk.Label(text = f"You are currently connected with {self.node.connectedaddress[0]}, {self.node.connectedaddress[1]}")
-        self.label2 = tk.Label(text = "")
-        self.label3 = tk.Label(text = "")
-        self.label4 = tk.Label(text = "")
-        self.label5 = tk.Label(text = "")
-        self.label6 = tk.Label(text = "")
-        self.label7 = tk.Label(text = "")
-        self.label8 = tk.Label(text = "")
+
+        self.labels = [tk.Label(text = ""), tk.Label(text = ""), tk.Label(text = ""), tk.Label(text = ""), tk.Label(text = ""), tk.Label(text = ""), tk.Label(text = "")]
 
         self.messageentry = tk.Entry(width = 70)
         self.sendbutton = tk.Button(text = "Send Message", background = "#259c45", activebackground = "#2621ad", font = 3, width = 30, height = 1, command = self.sendmessage)
-        
+        i = 2
+        for label in self.labels:
+            label.grid(row = i, column = 1, columnspan = 5, padx = 10, pady = 10)
+            i += 1
+
         self.label1.grid(row = 1, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label2.grid(row = 2, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label3.grid(row = 3, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label4.grid(row = 4, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label5.grid(row = 5, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label6.grid(row = 6, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label7.grid(row = 7, column = 1, columnspan = 5, padx = 10, pady = 10)
-        self.label8.grid(row = 8, column = 1, columnspan = 5, padx = 10, pady = 10)
 
         self.messageentry.grid(row = 9, column = 1, columnspan = 5, padx = 10, pady = 10)
         self.sendbutton.grid(row = 9, column = 6, columnspan = 3, padx = 10, pady = 10)
 
     def sendmessage(self):
-        self.label8.config(text = f"You: {self.messageentry.get()}")
         self.node.send_message(self.messageentry.get())
         self.messageentry.delete(0, tk.END)
 
-    
+    def redrawmessages(self):
+        i = 0
+        for message in self.messages:
+            self.labels[i].config(text = message)
+            i += 1    

@@ -19,6 +19,12 @@ class testnode():
 
     def send_message(self, message):
         self.sock.sendto(message.encode("utf-8"), self.connectedaddress)
+        if len(self.window.messages) >= 7:
+            self.window.messages.popleft()
+            self.window.messages.append(f"You: {message}")
+        else:
+            self.window.messages.append(f"You: {message}")
+        self.window.redrawmessages()
 
     def get_message(self):
         message, address = self.sock.recvfrom(1024)
@@ -27,4 +33,9 @@ class testnode():
     def listen(self):
         while True:
             address, message = self.get_message()
-            self.window.label2.config(text = f"{self.connectednodeid}: {message}")
+            if len(self.window.messages) >= 7:
+                self.window.messages.popleft()
+                self.window.messages.append(f"{self.connectednodeid}: {message}")
+            else:
+                self.window.messages.append(f"{self.connectednodeid}: {message}")
+            self.window.redrawmessages()
