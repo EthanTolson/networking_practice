@@ -68,7 +68,6 @@ class display():
         # Clear the screen
         self.loginbutton.destroy()
         self.label1.destroy()
-        self.label2.destroy()
         self.label3.destroy()
         self.label4.destroy()
         self.label5.destroy()
